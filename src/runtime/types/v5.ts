@@ -23,7 +23,7 @@ export interface Strapi5RequestParams<T> {
   populate?: '*' | Strapi5RequestParamPopulate<T> | Array<Strapi5RequestParamPopulate<T>>
   sort?: Strapi5RequestParamSort<T> | Array<Strapi5RequestParamSort<T>>
   pagination?: PaginationByOffset | PaginationByPage
-  filters?: Record<keyof T, unknown>
+  filters?: Record<string, unknown>
   publicationState?: 'live' | 'preview'
   locale?: StrapiLocale | null
 }
