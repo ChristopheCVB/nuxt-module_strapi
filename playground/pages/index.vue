@@ -52,6 +52,7 @@
 </template>
 
 <script lang="ts" setup>
+const strapi = useStrapi()
 const user = useStrapiUser()
 const url = useStrapiUrl()
 const version = useStrapiVersion()
@@ -59,6 +60,34 @@ const { login, logout, getProviderAuthenticationUrl } = useStrapiAuth()
 
 const loading = ref(false)
 const form = reactive({ identifier: '', password: '' })
+
+type Collection = {
+  firstname: string
+  lastname: string
+  relation: {
+    name: string
+    nestedRelation: {
+      name: string
+      arr: Array<{ name: string }>
+    }
+  }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const getCollections = () => {
+  return strapi.find<Collection>('collection', {
+    sort: ['lastname:asc', 'firstname'],
+    populate: 'relation.nestedRelation.arr'
+  })
+}
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const getUntyped = () => {
+  return strapi.find('untyped', {
+    sort: ['random'],
+    populate: 'relationRandom'
+  })
+}
 
 const onSubmit = async () => {
   loading.value = true

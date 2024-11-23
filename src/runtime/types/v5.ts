@@ -9,12 +9,21 @@ export interface Strapi5Error {
   }
 }
 
-export interface Strapi5RequestParams {
-  fields?: Array<string>
-  populate?: string | Array<string> | object
-  sort?: string | Array<string>
+type Strapi5RequestParamSort<T> = `${Exclude<keyof T, symbol>}${':asc' | ':desc' | ''}`
+type Strapi5RequestParamPopulate<T> = {
+  [K in keyof T]: T[K] extends object
+    ? T[K] extends Array<infer I>
+      ? `${Exclude<K, symbol>}` | `${Exclude<K, symbol>}.${Strapi5RequestParamPopulate<I>}`
+      : `${Exclude<K, symbol>}` | `${Exclude<K, symbol>}.${Strapi5RequestParamPopulate<T[K]>}`
+    : never;
+}[keyof T]
+
+export interface Strapi5RequestParams<T> {
+  fields?: Array<keyof T>
+  populate?: '*' | Strapi5RequestParamPopulate<T> | Array<Strapi5RequestParamPopulate<T>>
+  sort?: Strapi5RequestParamSort<T> | Array<Strapi5RequestParamSort<T>>
   pagination?: PaginationByOffset | PaginationByPage
-  filters?: Record<string, unknown>
+  filters?: Record<keyof T, unknown>
   publicationState?: 'live' | 'preview'
   locale?: StrapiLocale | null
 }
