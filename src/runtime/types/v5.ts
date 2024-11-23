@@ -9,7 +9,14 @@ export interface Strapi5Error {
   }
 }
 
+type Strapi5RequestParamField<T> = {
+  [K in keyof T]: T[K] extends object
+    ? never
+    : K;
+}[keyof T]
+
 type Strapi5RequestParamSort<T> = `${Exclude<keyof T, symbol>}${':asc' | ':desc' | ''}`
+
 type Strapi5RequestParamPopulate<T> = {
   [K in keyof T]: T[K] extends object
     ? T[K] extends Array<infer I>
@@ -19,7 +26,7 @@ type Strapi5RequestParamPopulate<T> = {
 }[keyof T]
 
 export interface Strapi5RequestParams<T> {
-  fields?: Array<keyof T>
+  fields?: Array<Strapi5RequestParamField<T>>
   populate?: '*' | Strapi5RequestParamPopulate<T> | Array<Strapi5RequestParamPopulate<T>>
   sort?: Strapi5RequestParamSort<T> | Array<Strapi5RequestParamSort<T>>
   pagination?: PaginationByOffset | PaginationByPage

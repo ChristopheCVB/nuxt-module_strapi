@@ -76,6 +76,7 @@ type Collection = {
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getCollections = () => {
   return strapi.find<Collection>('collection', {
+    fields: ['firstname'],
     sort: ['lastname:asc', 'firstname'],
     populate: 'relation.nestedRelation.arr'
   })
