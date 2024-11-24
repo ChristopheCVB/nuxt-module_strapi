@@ -7,6 +7,20 @@
     <h2>Version</h2>
     <pre>{{ version }}</pre>
 
+    <h2>API</h2>
+    <button
+      type="button"
+      @click="getCollections"
+    >
+      Get collections
+    </button>
+    <button
+      type="button"
+      @click="getUntyped"
+    >
+      Get untyped
+    </button>
+
     <div v-if="user">
       <h2>User</h2>
       <button
@@ -73,7 +87,6 @@ type Collection = {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getCollections = () => {
   return strapi.find<Collection>('collection', {
     fields: ['firstname'],
@@ -82,7 +95,6 @@ const getCollections = () => {
   })
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getUntyped = () => {
   return strapi.find('untyped', {
     sort: ['random'],
