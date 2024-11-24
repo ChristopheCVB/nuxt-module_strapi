@@ -1,4 +1,4 @@
-import type { MetaResponsePaginationByOffset, MetaResponsePaginationByPage, PaginationByOffset, PaginationByPage, StrapiLocale } from '.'
+import type { MetaResponsePaginationByOffset, MetaResponsePaginationByPage, PaginationByOffset, PaginationByPage, StrapiLocale, StrapiRequestParamField, StrapiRequestParamPopulate, StrapiRequestParamSort } from '.'
 
 export interface Strapi5Error {
   error: {
@@ -9,26 +9,10 @@ export interface Strapi5Error {
   }
 }
 
-type Strapi5RequestParamField<T> = {
-  [K in keyof T]: T[K] extends object
-    ? never
-    : K;
-}[keyof T]
-
-type Strapi5RequestParamSort<T> = `${Exclude<keyof T, symbol>}${':asc' | ':desc' | ''}`
-
-type Strapi5RequestParamPopulate<T> = {
-  [K in keyof T]: T[K] extends object
-    ? T[K] extends Array<infer I>
-      ? `${Exclude<K, symbol>}` | `${Exclude<K, symbol>}.${Strapi5RequestParamPopulate<I>}`
-      : `${Exclude<K, symbol>}` | `${Exclude<K, symbol>}.${Strapi5RequestParamPopulate<T[K]>}`
-    : never;
-}[keyof T]
-
 export interface Strapi5RequestParams<T> {
-  fields?: Array<Strapi5RequestParamField<T>>
-  populate?: '*' | Strapi5RequestParamPopulate<T> | Array<Strapi5RequestParamPopulate<T>>
-  sort?: Strapi5RequestParamSort<T> | Array<Strapi5RequestParamSort<T>>
+  fields?: Array<StrapiRequestParamField<T>>
+  populate?: '*' | StrapiRequestParamPopulate<T> | Array<StrapiRequestParamPopulate<T>>
+  sort?: StrapiRequestParamSort<T> | Array<StrapiRequestParamSort<T>>
   pagination?: PaginationByOffset | PaginationByPage
   filters?: Record<string, unknown>
   publicationState?: 'live' | 'preview'
